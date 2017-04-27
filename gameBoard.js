@@ -1,15 +1,15 @@
 class Player {
-  constructor(name, marker) {
+  constructor(name, token) {
     // stores name
     this.name = name;
-    // stores marker
-    this.marker = marker;
+    // stores token
+    this.token = token;
   }
 }
 
 class Board {
   constructor() {
-    this.board = [['X', '-', 'X'], ['-', 'X', 'X'], ['X', '-', 'X']];
+    this.board = [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']];
     this.cleanBoard = [...this.board];
   }
   // print board
@@ -27,6 +27,7 @@ class Board {
   // reset board
   resetBoard() {
     this.board = [...this.cleanBoard];
+    console.log(`this is the new board ${this.board}`);
   }
 
   // toggle piece
@@ -97,20 +98,40 @@ class TTT {
   constructor() {
     // retains access to current board
     this.board = new Board();
-    this.players = [new Player('elliott', 'X'), new Player('ben', 'O')];
+    this.players = [];
     this.turn = 0;
   }
   // keeps track of current turn
   endTurn() {
-    this.turn = (this.turn + 1) % 2;
-    console.log(`It is now ${this.players[this.turn].name}\'s turn`);
-    this.board.printBoard();
+    if (this.board.checkWin(this.players[this.turn].token)) {
+      console.log(`${this.players[this.turn].name} has won, starting a new game`);
+      this.board.resetBoard();
+      this.board.printBoard();
+      this.turn = (this.turn + 1) % 2;
+    } else {
+      this.turn = (this.turn + 1) % 2;
+      console.log(`It is now ${this.players[this.turn].name}s turn`);
+      this.board.printBoard();
+    }
   }
   // logs current players turn
   // increments turn
+  resetBoard() {
+    this.board.resetBoard();
+  }
   // add player
   addPlayer(name, marker) {
-    this.players.push(new Player(name, marker));
+    if (this.players.length < 3) {
+      this.players.push(new Player(name, marker));
+      console.log(`${name} has been added to the players list, using ${marker} marker`);
+    } else console.log('cant add any more players');
+  }
+
+  play(row, collumn) {
+    if (this.players.length === 2) {
+      this.board.togglePiece(this.players[this.turn].token, row, collumn);
+      this.endTurn();
+    } else console.log('Add more Players');
   }
 }
 
@@ -118,4 +139,7 @@ class TTT {
 const board = new Board();
 
 const game = new TTT();
-game.endTurn();
+game.play();
+game.addPlayer('elliott', 'X');
+game.addPlayer('ben', 'o');
+
