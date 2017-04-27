@@ -135,11 +135,4 @@ class TTT {
   }
 }
 
-
-const board = new Board();
-
 const game = new TTT();
-game.play();
-game.addPlayer('elliott', 'X');
-game.addPlayer('ben', 'o');
-
