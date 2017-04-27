@@ -1,18 +1,15 @@
-
-class TTT {
-  constructor() {
-    // retains access to current board
-    this.board = new Board();
+class Player {
+  constructor(name, marker) {
+    // stores name
+    this.name = name;
+    // stores marker
+    this.marker = marker;
   }
-  // checks for win condition
-  // keeps track of current turn
-  // logs current players turn
-  // increments turn
 }
 
 class Board {
   constructor() {
-    this.board = [['X', '-', 'X'], ['-', 'X', '-'], ['X', '-', 'X']];
+    this.board = [['X', '-', 'X'], ['-', 'X', 'X'], ['X', '-', 'X']];
     this.cleanBoard = [...this.board];
   }
   // print board
@@ -26,9 +23,21 @@ class Board {
     });
     console.log(res);
   }
+
   // reset board
+  resetBoard() {
+    this.board = [...this.cleanBoard];
+  }
+
   // toggle piece
-  // check diagonal win
+  togglePiece(token, row, collumn) {
+    this.board[row][collumn] = token;
+  }
+
+  checkWin(token) {
+    return this.checkMinDiag(token) || this.checkMajDiag(token) || this.checkHorizontal(token) || this.checkVertical(token);
+  }
+
   checkMinDiag(token) {
     const board = this.board;
     return this.board.reduce((pieces, piece, i) => {
@@ -37,6 +46,7 @@ class Board {
       } return pieces;
     }, 0) === 3;
   }
+
   checkMajDiag(token) {
     const board = this.board;
     return this.board.reduce((pieces, piece, i) => {
@@ -45,7 +55,7 @@ class Board {
       } return pieces;
     }, 0) === 3;
   }
-  // check horizontal win
+
   checkHorizontal(token) {
     function checkRow(row) {
       return row.reduce((pieces, piece) =>
@@ -59,9 +69,10 @@ class Board {
     }
     return false;
   }
-  // check vertical win
+
   checkVertical(token) {
     const board = this.board;
+
     function checkCollumn(collumn, board) {
       let pieces = 0;
       for (var i = 0; i < 3; i++) {
@@ -71,8 +82,9 @@ class Board {
       }
       return pieces === 3;
     }
-    for (var row = 0; row < board.length; row++) {
-      if (checkCollumn(board[row])) {
+
+    for (var collumn = 0; collumn < board.length; collumn++) {
+      if (checkCollumn(collumn, board)) {
         return true;
       }
     }
@@ -81,15 +93,29 @@ class Board {
 
 }
 
-class Player {
-  constructor(name, marker) {
-    // stores name
-    this.name = name;
-    // stores marker
-    this.marker = marker;
+class TTT {
+  constructor() {
+    // retains access to current board
+    this.board = new Board();
+    this.players = [new Player('elliott', 'X'), new Player('ben', 'O')];
+    this.turn = 0;
+  }
+  // keeps track of current turn
+  endTurn() {
+    this.turn = (this.turn + 1) % 2;
+    console.log(`It is now ${this.players[this.turn].name}\'s turn`);
+    this.board.printBoard();
+  }
+  // logs current players turn
+  // increments turn
+  // add player
+  addPlayer(name, marker) {
+    this.players.push(new Player(name, marker));
   }
 }
 
+
 const board = new Board();
-board.checkHorizontal('X');
-board.checkMinDiag('X');
+
+const game = new TTT();
+game.endTurn();
