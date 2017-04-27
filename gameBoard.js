@@ -26,7 +26,7 @@ class Board {
 
   // reset board
   resetBoard() {
-    this.board = [...this.cleanBoard];
+    this.board = [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']];
     console.log(`this is the new board ${this.board}`);
   }
 
