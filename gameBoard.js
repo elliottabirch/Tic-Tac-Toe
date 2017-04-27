@@ -46,17 +46,38 @@ class Board {
     }, 0) === 3;
   }
   // check horizontal win
-  // checkHorizontal(token){
-  //   function checkRow(row) {
-  //     return row.reduce((pieces))
-  //   }
-  //   const board = this.board;
-  //   var hasWin = false;
-  //   for (var row = 0; row < board.length; row++) {
-
-  //   }
-  // }
+  checkHorizontal(token) {
+    function checkRow(row) {
+      return row.reduce((pieces, piece) =>
+        piece === token ? pieces + 1 : pieces, 0) === 3;
+    }
+    const board = this.board;
+    for (var row = 0; row < board.length; row++) {
+      if (checkRow(board[row])) {
+        return true;
+      }
+    }
+    return false;
+  }
   // check vertical win
+  checkVertical(token) {
+    const board = this.board;
+    function checkCollumn(collumn, board) {
+      let pieces = 0;
+      for (var i = 0; i < 3; i++) {
+        if (board[i][collumn] === token) {
+          pieces++;
+        }
+      }
+      return pieces === 3;
+    }
+    for (var row = 0; row < board.length; row++) {
+      if (checkCollumn(board[row])) {
+        return true;
+      }
+    }
+    return false;
+  }
 
 }
 
@@ -70,5 +91,5 @@ class Player {
 }
 
 const board = new Board();
-board.checkMajDiag('X');
+board.checkHorizontal('X');
 board.checkMinDiag('X');
